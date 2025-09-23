@@ -216,7 +216,8 @@ const handleSubmit = async (e) => {
   return (
     <>
       <Navbar />
-      <div className="bg-white p-6 max-w-xl mx-auto mt-10 rounded-xl ">
+      {/*<div className="bg-white p-6 max-w-xl mx-auto mt-10 rounded-xl ">
+        {/* Step Progress Bar 
         <div className="relative mb-8">
           <div className="flex justify-between items-center">
             {steps.map((label, i) => (
@@ -249,7 +250,7 @@ const handleSubmit = async (e) => {
           </div>
         </div>
 
-         
+        {/* Form 
         <form onSubmit={handleSubmit} className="space-y-6">
           {step === 0 && (
             <>
@@ -466,6 +467,7 @@ const handleSubmit = async (e) => {
 
           {step === 2 && <Ticket formData={formData} />}
 
+       {/* Button controls 
 {step < 2 && (
   <div className="flex justify-between pt-4">
     {step > 0 ? (
@@ -511,7 +513,8 @@ const handleSubmit = async (e) => {
   }}
 />
         )}
-      </div>
+      </div>*/}
+      <BookingNoticeDialog />
 
     </>
   );
