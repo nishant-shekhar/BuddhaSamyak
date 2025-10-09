@@ -1,115 +1,131 @@
-import { useEffect, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
 
-const Ticket = ({ formData }) => {
-  const [ticketId, setTicketId] = useState("");
+export default function Ticket({ formData }) {
+  const ticketNo = String(formData.ticketNo ?? "").padStart(6, "0");
 
-  useEffect(() => {
-    const generateTicketId = () => {
-      const randomId = Math.floor(
-        10000000 + Math.random() * 90000000
-      ).toString();
-      setTicketId(randomId);
-    };
-    generateTicketId();
-  }, []);
-
-  const qrData = JSON.stringify({
-    ...formData,
-    ticketId,
+  const qrPayload = JSON.stringify({
+    id: formData.qrData?.id ?? null,
+    t: ticketNo || null,
+    d: formData.date ?? null,
+    s: formData.sessionType ?? null,
   });
 
   return (
-    <div id="ticket-to-download">
-    <div className="flex min-h-screen items-center justify-center p-8">
-      <div className="w-[350px] overflow-hidden rounded-3xl bg-[#ffffff] drop-shadow-2xl border border-[#d1d5db]">
+    <div id="ticket-to-download" className="flex items-center justify-center p-6">
+      <div
+        id="ticket-card"
+        className="
+          w-[350px] overflow-hidden rounded-3xl
+          bg-[#ffffff]              
+          drop-shadow-2xl
+          border border-[#d1d5db]   m-6
+        "
+      >
         <div className="relative border-b border-[#d1d5db] p-6 text-xs">
           <div className="flex justify-between items-center mt-2">
-            {/* Left side text */}
-            <h3 className="text-sm font-semibold text-[#6b7280]">
-              ENTRY TICKET
-            </h3>
-
-            {/* Right side images */}
+            <h3 className="text-sm font-semibold text-[#6b7280]">ENTRY TICKET</h3> {/* was text-gray-500 */}
             <div className="flex items-center gap-2">
-              <img
-                src="/buddha.png"
-                alt="Logo 1"
-                className="h-8 w-8 object-contain"
-              />
-              <img
-                src="biharGovLogo.jpg"
-                alt="Logo 2"
-                className="h-8 w-8 object-contain"
-              />
+              <img src="/buddha.png" alt="Buddha Samyak" className="h-8 w-8 object-contain" crossOrigin="anonymous" />
+              <img src="/biharGovLogo.jpg" alt="Bihar Govt." className="h-8 w-8 object-contain" crossOrigin="anonymous" />
             </div>
           </div>
 
           <h1 className="text-2xl w-full leading-snug font-bold text-[#000000]">
-            Buddha Samyak <br />
-            Darshan Museum
+            Buddha Samyak <br /> Darshan Museum
           </h1>
-          <div className="mt-4 border-t w-full border-dashed border-[#9ca3af]"></div>
 
-          <div className="mt-6 space-y-4 text-[12px] text-[#6b7280]">
-            {/* Row 1 */}
+          <div className="mt-4 border-t w-full border-dashed border-[#9ca3af]" /> {/* was border-gray-400 */}
+
+          <div className="mt-6 space-y-4 text-[12px] text-[#6b7280]">       {/* was text-gray-500 */}
             <div className="flex justify-between gap-4">
               <div className="w-1/2">
-                <div className="text-xs text-[#9ca3af]">Full Name</div>
+                <div className="text-xs text-[#9ca3af]">Full Name</div>      {/* was text-gray-400 */}
                 <div className="text-sm font-bold text-[#000000]">
-                  {formData.fullName || "Name"}
+                  {formData.fullName || "—"}
                 </div>
               </div>
               <div className="w-1/2 text-right">
                 <div className="text-xs text-[#9ca3af]">Phone</div>
                 <div className="text-sm font-bold text-[#000000]">
-                  {formData.phone || "Phone"}
+                  {formData.phone || "—"}
                 </div>
               </div>
             </div>
 
-            {/* Row 2 */}
             <div className="flex justify-between gap-4">
               <div className="w-1/2">
                 <div className="text-xs text-[#9ca3af]">Email</div>
                 <div className="text-sm font-bold text-[#000000]">
-                  {formData.email || "Email"}
+                  {formData.email || "—"}
                 </div>
               </div>
               <div className="w-1/2 text-right">
                 <div className="text-xs text-[#9ca3af]">Country</div>
                 <div className="text-sm font-bold text-[#000000]">
-                  {formData.country || "Country"}
+                  {formData.country || "—"}
                 </div>
               </div>
             </div>
 
-            {/* Row 3 */}
-            <div className="flex justify-between gap-4">
-              <div className="w-1/2">
-                <div className="text-xs text-[#9ca3af]">Adults</div>
-                <div className="text-sm font-bold text-[#000000]">
-                  {formData.adults || 0}
+            {formData.ticketType === "group" ? (
+              <>
+                <div className="flex justify-between gap-4">
+                  <div className="w-1/2">
+                    <div className="text-xs text-[#9ca3af]">Group Type</div>
+                    <div className="text-sm font-bold text-[#000000]">
+                      {formData.groupCategory === "tourist" ? "Tourist Group" : "Student Group"}
+                    </div>
+                  </div>
+                  <div className="w-1/2 text-right">
+                    <div className="text-xs text-[#9ca3af]">Group Size</div>
+                    <div className="text-sm font-bold text-[#000000]">
+                      {formData.groupSize ?? 0}
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div className="w-1/2 text-right">
-                <div className="text-xs text-[#9ca3af]">Children</div>
-                <div className="text-sm font-bold text-[#000000]">
-                  {formData.children || 0}
-                </div>
-              </div>
-            </div>
 
-            {/* Row 4 */}
+                {(formData.leaderName || formData.instituteName) && (
+                  <div className="flex justify-between gap-4">
+                    <div className="w-1/2">
+                      <div className="text-xs text-[#9ca3af]">
+                        {formData.groupCategory === "tourist" ? "Team Leader" : "Institute"}
+                      </div>
+                     <div className="text-sm font-bold text-[#000000] whitespace-normal break-words leading-snug">
+  {formData.groupCategory === "tourist" ? (formData.leaderName || "—") : (formData.instituteName || "—")}
+</div>
+
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex justify-between gap-4">
+                <div className="w-1/2">
+                  <div className="text-xs text-[#9ca3af]">Adults</div>
+                  <div className="text-sm font-bold text-[#000000]">
+                    {formData.adults ?? 0}
+                  </div>
+                </div>
+                <div className="w-1/2 text-right">
+                  <div className="text-xs text-[#9ca3af]">Children</div>
+                  <div className="text-sm font-bold text-[#000000]">
+                    {formData.children ?? 0}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between gap-4">
               <div className="w-1/2">
                 <div className="text-xs text-[#9ca3af]">Date</div>
                 <div className="text-sm font-bold text-[#000000]">
-                  {formData.date || "No Date"}
+                 {formData.date
+  ? new Date(formData.date).toLocaleDateString("en-GB")  // outputs dd/mm/yyyy
+  : "No Date"}
                 </div>
               </div>
               <div className="w-1/2 text-right">
-                <div className="text-xs text-[#9ca3af]">Session Type</div>
+                <div className="text-xs text-[#9ca3af]">Session</div>
                 <div className="text-sm font-bold text-[#000000] whitespace-nowrap">
                   {formData.sessionType || "No Session"}
                 </div>
@@ -117,34 +133,40 @@ const Ticket = ({ formData }) => {
             </div>
           </div>
 
-          <div className="mt-4 border-t border-dashed border-[#9ca3af]"></div>
+          <div className="mt-4 border-t border-dashed border-[#9ca3af]" />
           <div className="text-center mt-2">
             <p className="text-xs text-[#6b7280]">Ticket Number</p>
-            <p className="text-xl font-extrabold rounded-md">
-              <span>{ticketId}</span>
+            <p className="text-xl font-extrabold rounded-md tracking-wider text-[#000000]">
+              {ticketNo || "—"}
             </p>
           </div>
         </div>
 
-        <div className="relative rounded-b-3xl bg-[#000000]">
-          <div className="absolute inset-0 z-0 bg-[url(/ticketBgPattern.jpg)] bg-cover bg-center bg-no-repeat opacity-90 rounded-b-3xl"></div>
-
+        {/* QR block */}
+        <div className="relative rounded-b-3xl bg-[#000000]">  {/* was bg-black */}
+          <div
+            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-90 rounded-b-3xl"
+            style={{ backgroundImage: "url('/ticketBgPattern.jpg')" }}
+          />
           <div className="relative z-10 flex items-center justify-center py-6">
-            <div className="rounded-2xl bg-[#00000067] backdrop-blur-sm p-4">
+            <div
+              className="rounded-2xl backdrop-blur-sm p-3"
+              style={{ backgroundColor: "rgba(0,0,0,0.4)" }} 
+            >
               <QRCode
-                value={qrData}
-                size={150}
+                value={qrPayload}
+                renderAs="canvas"
+                size={180}
+                quietZone={8}
+                ecLevel="M"
                 fgColor="#000000"
                 bgColor="#ffffff"
-                className="rounded object-contain"
+                qrStyle="squares"
               />
             </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
   );
-};
-
-export default Ticket;
+}
