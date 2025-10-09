@@ -202,7 +202,7 @@ const printableHeight = canvas.height - margin * 2;
           {/* Footer */}
           <div className="bg-gray-50 px-8 py-4 border-t border-gray-200">
             <p className="text-xs text-center text-gray-500">
-              Need help? Contact us at support@museum.com
+              Need help? Contact us at bsdmuseum.vaishali@gmail.com
             </p>
           </div>
         </motion.div>
